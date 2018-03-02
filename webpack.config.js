@@ -1,7 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack'); //webpack has properties on it that allows to do 1 and 2
-//const json = require('apikeys.json');
 
 // 1)set up plugin to set NODE_ENV variable to production
 // 2)also uglify or minify all of the code
@@ -37,14 +36,14 @@ if(process.env.NODE_ENV === 'production'){
   config.plugins.push(
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify(process.env.NODE_ENV) //this line sets the node environment insode of code that is compiles for production after checking on package.json
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV) //this line sets the node environment inside of code that is compiles for production after checking on package.json
       }
     }),
     new webpack.optimize.UglifyJsPlugin()
   )
 }
 
-
+// watch: true  equivalent to weback --w
 module.exports = config;
 
 
@@ -58,3 +57,11 @@ module.exports = config;
 //--dirname ---> gives current directory
 
 //whenver
+ // In Babel, a preset is a set of plugins used to support particular language features. The two presets Babel uses by default:
+  // es2015: Adds support for ES2015 (or ES6) JavaScript
+  // react: Adds support for JSX
+  // stage-0 - Strawman: just an idea, possible Babel plugin.
+  // stage-1 - Proposal: this is worth working on.
+  // stage-2 - Draft: initial spec.
+  // stage-3 - Candidate: complete spec and initial browser implementations.
+  // stage-4 - Finished: will be added to the next yearly release.

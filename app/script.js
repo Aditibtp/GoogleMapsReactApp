@@ -22,6 +22,7 @@ function initMap(posLat, posLong) {
         center: {lat: posLat, lng: posLong},
         zoom: 15
     });
+    hideLoader();
     geocoder = new google.maps.Geocoder;
     infowindow = new google.maps.InfoWindow;
     var marker = new google.maps.Marker({
@@ -38,9 +39,9 @@ function geocodeLatLng(geocoder, map, infowindow) {
     geocoder.geocode({'location': latlng}, function(results, status) {
     if (status === 'OK') {
         if (results[0]) {
-        console.log(results[5]);
+            console.log(results[5]);
         } else {
-        window.alert('No results found');
+            window.alert('No results found');
         }
     } else {
         window.alert('Geocoder failed due to: ' + status);
@@ -60,6 +61,15 @@ function getWeatherData(uluru){
         redirect: 'follow', // *manual, error
     })
     .then(response => response.json()) // parses response to JSON
+}
+
+function hideLoader(){
+    map.addListener("idle", function(){
+        var loadingEle = document.querySelector(".loader");
+        loadingEle.style.display = "none";
+        var mapEle = document.querySelector("#mapCont");
+        mapCont.style.display = "block";
+    });
 }
 
 function attachGoogleMapsApi(){

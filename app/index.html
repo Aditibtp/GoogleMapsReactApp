@@ -4,12 +4,27 @@
     <title>Simple Map</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
+    <link href='https://fonts.googleapis.com/css?family=Catamaran' rel='stylesheet'>
     <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
+      #mapCont{
+        width:100%;
+        display: none;
+        height: 100%;
+      } 
       #map {
         width:100%;
         height: 100%;
+      }
+      body {
+        font-family: 'Catamaran';font-size: 22px;
+      }
+      .main-header{
+        background-color: #72dada;
+        height: 20%;
+        width: 100%;
+        min-height: 150px;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body, .main-container {
@@ -17,14 +32,73 @@
         margin: 0;
         padding: 0;
       }
+      .text-header{
+        color: #fff;
+        height: 30%;
+        padding: 20px 0 0 50px;
+        font-size: 1.5em;
+      }
+      input{
+        outline: none;
+        border: 0;
+        width: 200px;
+        height: 40%;
+        margin-right: 10px;
+        border-radius: 2px;
+        font-size: 0.8em;
+        background-color: #ffe7e7;
+      }
+      .form-element-div{
+        height: 50%;
+        padding: 20px 0 0 50px;
+      }
+      .loader{
+        margin-top:10%;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background-color: #fff;
+        border: 7px solid #72dada;
+        border-right: 7px solid #FF5722;
+        animation-duration: 1s;
+        animation-name: rotateLoader;
+        animation-iteration-count: infinite;
+      }
+      @keyframes rotateLoader {
+        from {
+          transform: rotate(0deg);
+        }
+
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .body-cont{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width:100%;
+        height: 100%;
+      }
     </style>
   </head>
   <body>
     <div class="main-container">  
-        <div class="main-header">
-
+      <div class="main-header">
+        <div class="text-header"><span>Weather Reporter</span></div>
+          <div class="form-element-div">
+            <input type="text" placeholder="current country"></input>
+            <input type="text" placeholder="current state"></input>
+            <input type="text" placeholder="current city"></input>
+          </div>
         </div>
-        <div id="map"></div>
+        <div class="body-cont">
+          <div class="loader"></div>
+          <div id="mapCont">
+            <div id="map"></div>
+          </div>
+        </div>
     </div>
     <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOH6MSgQoIx8cQ09zwt0eQGtWz_mqfNw4&callback=getUserLocation&libraries=drawing,places"
     async defer></script> -->
