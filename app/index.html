@@ -8,6 +8,14 @@
     <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
+      html, body{
+        margin: 0;
+        padding: 0;
+      }
+      p{
+        margin: 0;
+        padding: 0;
+      }
       #mapCont{
         width:100%;
         display: none;
@@ -22,7 +30,7 @@
         position: relative;
       }
       .main-header{
-        background-color: #72dada;
+        background-color: #00d6d6;
         height: 20%;
         width: 100%;
         min-height: 150px;
@@ -47,7 +55,6 @@
         margin-right: 10px;
         border-radius: 2px;
         font-size: 0.6em;
-        background-color: #ffe7e7;
       }
       .form-element-div{
         height: 50%;
@@ -59,7 +66,7 @@
         height: 70px;
         border-radius: 50%;
         background-color: #fff;
-        border: 7px solid #72dada;
+        border: 7px solid #00d6d6;
         border-right: 7px solid #FF5722;
         animation-duration: 1.5s;
         animation-name: rotateLoader;
@@ -82,11 +89,33 @@
         height: 100%;
       }
       .weather-popup{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         position: absolute;
-        width: 150px;
-        height: 100px;
-        border:1px solid #72dada;
+        width: 250px;
+        height: 120px;
+        border:1px solid #00d6d6;
         background-color: #FF5722;
+        font-size: 14px;
+        color: #fff;
+      }
+      .weather-intro{
+        display: inline-flex;
+        flex-direction: row;
+      }
+      .weather-icon-svg{
+        width: 50px;
+      }
+      .min-temp-text, .max-temp-text{
+        margin-right: 15px;
+      }
+      .weather-summary{
+        display: flex;
+        flex-direction: column;
+        padding-top: 10px;
+        margin-left: 20px;
       }
     </style>
   </head>
@@ -106,7 +135,23 @@
             <div id="map"></div>
           </div>
           <div class="weather-popup">
-
+            <div class="weather-intro">
+              <div class="weather-icon"><img src="/images/weather-icons/01d.svg" class="weather-icon-svg"/></div>
+              <div class="weather-summary">
+                <p>Bengaluru, Karnataka</p>
+                <p class="weather-sum">Clear Sky</p>
+              </div>
+            </div>
+            <div class="weather-details">   
+              <p>
+                <span class="min-temp-text">Min Temp:</span>
+                <span class="min-temp-value">18</span>
+              </p>
+              <p>
+                <span class="max-temp-text">Max Temp:</span>
+                <span class="max-temp-value">35</span>
+              </p>
+            </div>
           </div>
         </div>
     </div>
