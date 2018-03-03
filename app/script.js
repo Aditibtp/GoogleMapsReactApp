@@ -6,6 +6,8 @@ var posLong;
 var geocoder;
 var infowindow;
 var uluru;
+var mapsOverlay;
+var marker;
 
 window.getUserLocation = function(){
     navigator.geolocation.getCurrentPosition(function(position) {
@@ -20,12 +22,12 @@ function initMap(posLat, posLong) {
     
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: posLat, lng: posLong},
-        zoom: 15
+        zoom: 8
     });
     hideLoader();
     geocoder = new google.maps.Geocoder;
     infowindow = new google.maps.InfoWindow;
-    var marker = new google.maps.Marker({
+    marker = new google.maps.Marker({
         position: uluru,
         map: map
     });
@@ -39,7 +41,7 @@ function geocodeLatLng(geocoder, map, infowindow) {
     geocoder.geocode({'location': latlng}, function(results, status) {
     if (status === 'OK') {
         if (results[0]) {
-            console.log(results[5]);
+            //console.log(results[5]);
         } else {
             window.alert('No results found');
         }
@@ -69,6 +71,22 @@ function hideLoader(){
         loadingEle.style.display = "none";
         var mapEle = document.querySelector("#mapCont");
         mapCont.style.display = "block";
+
+        //get x and y of current lat-long marker
+        mapsOverlay = new google.maps.OverlayView();
+        mapsOverlay.draw = function() {};
+        mapsOverlay.setMap(map);
+        var proj = mapsOverlay.getProjection();
+        if(proj){
+            var pos = marker.getPosition();
+            console.log(proj)
+            console.log("*********")
+            var p = proj.fromLatLngToContainerPixel(pos);
+            console.log(p);
+            var weatherPopUp = document.querySelector(".weather-popup");
+            weatherPopUp.style.left = p.x + "px";
+            weatherPopUp.style.top = p.y + "px";
+        }
     });
 }
 
