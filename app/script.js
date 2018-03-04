@@ -25,6 +25,7 @@ function initMap(posLat, posLong) {
         zoom: 8
     });
     hideLoader();
+    addMapClickListener();
     geocoder = new google.maps.Geocoder;
     infowindow = new google.maps.InfoWindow;
     marker = new google.maps.Marker({
@@ -71,24 +72,31 @@ function hideLoader(){
         loadingEle.style.display = "none";
         var mapEle = document.querySelector("#mapCont");
         mapCont.style.display = "block";
-
-        //get x and y of current lat-long marker
-        mapsOverlay = new google.maps.OverlayView();
-        mapsOverlay.draw = function() {};
-        mapsOverlay.setMap(map);
-        var proj = mapsOverlay.getProjection();
-        if(proj){
-            var pos = marker.getPosition();
-            console.log(proj)
-            console.log("*********")
-            var p = proj.fromLatLngToContainerPixel(pos);
-            console.log(p);
-            var weatherPopUp = document.querySelector(".weather-popup");
-            weatherPopUp.style.left = p.x + "px";
-            weatherPopUp.style.top = p.y + "px";
-        }
+        addWeatherPopupForMarker(marker);
     });
+};
+
+function addWeatherPopupForMarker(marker){
+    //get x and y of current lat-long marker
+    mapsOverlay = new google.maps.OverlayView();
+    mapsOverlay.draw = function() {};
+    mapsOverlay.setMap(map);
+    var proj = mapsOverlay.getProjection();
+    if(proj){
+        var pos = marker.getPosition();
+        var p = proj.fromLatLngToContainerPixel(pos);
+        var weatherPopUp = document.querySelector(".weather-popup");
+        weatherPopUp.style.left = (p.x - 110) + "px";
+        weatherPopUp.style.top = (p.y - 10) + "px";
+        weatherPopUp.style.visibility = "visible";
+    }
 }
+
+function addMapClickListener(){
+    map.addListener('click', function(event) {
+        placeMarker(event.latLng);
+    });
+};
 
 function attachGoogleMapsApi(){
     var scriptEle = document.createElement("script");
@@ -98,5 +106,13 @@ function attachGoogleMapsApi(){
     var bodyElement = document.querySelector("body");
     bodyElement.appendChild(scriptEle);
 };
+ 
+ function placeMarker(location) {
+     var marker = new google.maps.Marker({
+         position: location, 
+         map: map
+     });
+     addWeatherPopupForMarker(marker);
+ }
 
 attachGoogleMapsApi();

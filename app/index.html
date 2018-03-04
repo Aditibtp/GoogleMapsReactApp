@@ -17,7 +17,7 @@
         padding: 0;
       }
       #mapCont{
-        width:100%;
+        width: 100%;
         display: none;
         height: 100%;
       } 
@@ -52,13 +52,13 @@
         border: 0;
         width: 200px;
         height: 40%;
-        margin-right: 10px;
         border-radius: 2px;
         font-size: 0.6em;
       }
       .form-element-div{
         height: 50%;
         padding: 20px 0 0 50px;
+        margin-left: 30px;
       }
       .loader{
         margin-top:10%;
@@ -66,7 +66,6 @@
         height: 70px;
         border-radius: 50%;
         background-color: #fff;
-        border: 7px solid #00d6d6;
         border-right: 7px solid #FF5722;
         animation-duration: 1.5s;
         animation-name: rotateLoader;
@@ -90,11 +89,12 @@
       }
       .weather-popup{
         display: flex;
+        visibility: hidden;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         position: absolute;
-        width: 250px;
+        width: 220px;
         height: 120px;
         border:1px solid #00d6d6;
         background-color: #FF5722;
@@ -117,6 +117,17 @@
         padding-top: 10px;
         margin-left: 20px;
       }
+      .form-btn{
+        width: 50px;
+        height: 33px;
+        outline: none;
+        border: none;
+        border-radius: 3px;
+        color: #fff;
+        font-size: 13px;
+        background-color: #FF5722;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -125,34 +136,33 @@
         <div class="text-header"><span>Weather Reporter</span></div>
           <div class="form-element-div">
             <input type="text" placeholder="current country"></input>
-            <input type="text" placeholder="current state"></input>
-            <input type="text" placeholder="current city"></input>
+            <button class="form-btn">Go</button>
           </div>
-        </div>
+      </div>
         <div class="body-cont">
           <div class="loader"></div>
-          <div id="mapCont">
-            <div id="map"></div>
-          </div>
-          <div class="weather-popup">
-            <div class="weather-intro">
-              <div class="weather-icon"><img src="/images/weather-icons/01d.svg" class="weather-icon-svg"/></div>
-              <div class="weather-summary">
-                <p>Bengaluru, Karnataka</p>
-                <p class="weather-sum">Clear Sky</p>
+            <div id="mapCont">
+              <div id="map"></div>
+            </div>
+            <div class="weather-popup">
+              <div class="weather-intro">
+                <div class="weather-icon"><img src="/images/weather-icons/01d.svg" class="weather-icon-svg"/></div>
+                <div class="weather-summary">
+                  <p>Bengaluru, Karnataka</p>
+                  <p class="weather-sum">Clear Sky</p>
+                </div>
+              </div>
+              <div class="weather-details">   
+                <p>
+                  <span class="min-temp-text">Min Temp:</span>
+                  <span class="min-temp-value">18</span>
+                </p>
+                <p>
+                  <span class="max-temp-text">Max Temp:</span>
+                  <span class="max-temp-value">35</span>
+                </p>
               </div>
             </div>
-            <div class="weather-details">   
-              <p>
-                <span class="min-temp-text">Min Temp:</span>
-                <span class="min-temp-value">18</span>
-              </p>
-              <p>
-                <span class="max-temp-text">Max Temp:</span>
-                <span class="max-temp-value">35</span>
-              </p>
-            </div>
-          </div>
         </div>
     </div>
     <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOH6MSgQoIx8cQ09zwt0eQGtWz_mqfNw4&callback=getUserLocation&libraries=drawing,places"
