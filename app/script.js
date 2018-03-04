@@ -8,6 +8,7 @@ var infowindow;
 var uluru;
 var mapsOverlay;
 var marker;
+var inputEle = document.querySelector("input");
 
 window.getUserLocation = function(){
     navigator.geolocation.getCurrentPosition(function(position) {
@@ -42,7 +43,7 @@ function geocodeLatLng(geocoder, map, infowindow) {
     geocoder.geocode({'location': latlng}, function(results, status) {
     if (status === 'OK') {
         if (results[0]) {
-            //console.log(results[5]);
+            updateInputValue(results[5]);
         } else {
             window.alert('No results found');
         }
@@ -50,9 +51,9 @@ function geocodeLatLng(geocoder, map, infowindow) {
         window.alert('Geocoder failed due to: ' + status);
     }
     });
-    getWeatherData(uluru)
-    .then(data => console.log(data)) // JSON from `response.json()` call
-    .catch(error => console.error(error))
+    // getWeatherData(uluru)
+    // .then(data => updateWeatherPopUp(data)) // JSON from `response.json()` call
+    // .catch(error => console.error(error))
 };
 
 function getWeatherData(uluru){
@@ -92,6 +93,7 @@ function addWeatherPopupForMarker(marker){
     }
 }
 
+//updates marker position and creates pop up for new marker position
 function addMapClickListener(){
     map.addListener('click', function(event) {
         placeMarker(event.latLng);
@@ -112,7 +114,24 @@ function attachGoogleMapsApi(){
          position: location, 
          map: map
      });
+     var lat = marker.getPosition().lat();
+     var lng = marker.getPosition().lng();
+     console.log(marker.getPosition().lat());
+     var pos = {lat: lat, lng: lng};
+     getWeatherData(pos)
+     .then(data => updateWeatherPopUp(data)) // JSON from `response.json()` call
+     .catch(error => console.error(error));
      addWeatherPopupForMarker(marker);
+ };
+
+ function updateInputValue(resultArray){
+     var addressComp = resultArray.address_components;
+    inputEle.value = `${addressComp[1].long_name}, ${addressComp[3].long_name}`
  }
+
+ function updateWeatherPopUp(weatherInfo){
+    console.log(weatherInfo)
+ };
+
 
 attachGoogleMapsApi();
