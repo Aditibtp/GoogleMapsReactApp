@@ -88,6 +88,10 @@
         width:100%;
         height: 100%;
       }
+      #weather-cont{
+        width: 220px;
+        height: 120px;
+      }
       .weather-popup{
         display: flex;
         visibility: hidden;
@@ -145,25 +149,7 @@
             <div id="mapCont">
               <div id="map"></div>
             </div>
-            <div class="weather-popup">
-              <div class="weather-intro">
-                <div class="weather-icon"><img src="/images/weather-icons/01d.svg" class="weather-icon-svg"/></div>
-                <div class="weather-summary">
-                  <p>Bengaluru, Karnataka</p>
-                  <p class="weather-sum">Clear Sky</p>
-                </div>
-              </div>
-              <div class="weather-details">   
-                <p>
-                  <span class="min-temp-text">Min Temp:</span>
-                  <span class="min-temp-value">18</span>
-                </p>
-                <p>
-                  <span class="max-temp-text">Max Temp:</span>
-                  <span class="max-temp-value">35</span>
-                </p>
-              </div>
-            </div>
+            <div id="weather-cont"></div>
         </div>
     </div>
     <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOH6MSgQoIx8cQ09zwt0eQGtWz_mqfNw4&callback=getUserLocation&libraries=drawing,places"

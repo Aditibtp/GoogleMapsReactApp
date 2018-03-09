@@ -1,4 +1,7 @@
+var React  = require('react');
+var ReactDom = require('react-dom');
 import apiKeys from "../config/apikeys.json"
+var WeatherPopup = require('../components/WeatherPopup');
 
 var map;
 var posLat;
@@ -82,7 +85,11 @@ function addWeatherPopupForMarker(marker){
     mapsOverlay = new google.maps.OverlayView();
     mapsOverlay.draw = function() {};
     mapsOverlay.setMap(map);
+    var popUpCont = document.querySelector("#weather-cont");
     var proj = mapsOverlay.getProjection();
+    ReactDom.render(
+        <WeatherPopup weathDesc="Clear sky" minTemp="18" maxTemp="36"/>, popUpCont
+    )
     if(proj){
         var pos = marker.getPosition();
         var p = proj.fromLatLngToContainerPixel(pos);
@@ -116,8 +123,7 @@ function attachGoogleMapsApi(){
      });
      var lat = marker.getPosition().lat();
      var lng = marker.getPosition().lng();
-     console.log(marker.getPosition().lat());
-     var pos = {lat: lat, lng: lng};
+     var pos = {lat, lng};
      getWeatherData(pos)
      .then(data => updateWeatherPopUp(data)) // JSON from `response.json()` call
      .catch(error => console.error(error));
