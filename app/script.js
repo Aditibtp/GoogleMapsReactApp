@@ -12,6 +12,7 @@ var uluru;
 var mapsOverlay;
 var marker;
 var inputEle = document.querySelector("input");
+var weatherInfo = {};
 
 window.getUserLocation = function(){
     navigator.geolocation.getCurrentPosition(function(position) {
@@ -54,13 +55,13 @@ function geocodeLatLng(geocoder, map, infowindow) {
         window.alert('Geocoder failed due to: ' + status);
     }
     });
-    // getWeatherData(uluru)
-    // .then(data => updateWeatherPopUp(data)) // JSON from `response.json()` call
-    // .catch(error => console.error(error))
+    getWeatherData(uluru)
+    .then(data => updateWeatherPopUp(data)) // JSON from `response.json()` call
+    .catch(error => console.error(error))
 };
 
 function getWeatherData(uluru){
-    var weatherApiUrl = `http://api.openweathermap.org/data/2.5/weather?lat=${uluru.lat}&lon=${uluru.lng}&APPID=${apiKeys.weather_api}&cnt=5`
+    var weatherApiUrl = `http://api.openweathermap.org/data/2.5/weather?lat=${uluru.lat}&lon=${uluru.lng}&APPID=${apiKeys.weather_api}&cnt=5&units=metric`
     // Default options are marked with *
     return fetch(weatherApiUrl, {
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -82,13 +83,14 @@ function hideLoader(){
 
 function addWeatherPopupForMarker(marker){
     //get x and y of current lat-long marker
+    console.log(weatherInfo)
     mapsOverlay = new google.maps.OverlayView();
     mapsOverlay.draw = function() {};
     mapsOverlay.setMap(map);
     var popUpCont = document.querySelector("#weather-cont");
     var proj = mapsOverlay.getProjection();
     ReactDom.render(
-        <WeatherPopup weathDesc="Clear sky" minTemp="18" maxTemp="36"/>, popUpCont
+        <WeatherPopup weathDesc={weatherInfo.weather[0].description} minTemp={weatherInfo.main.temp_max} maxTemp={weatherInfo.main.temp_min}/>, popUpCont
     )
     if(proj){
         var pos = marker.getPosition();
@@ -127,7 +129,6 @@ function attachGoogleMapsApi(){
      getWeatherData(pos)
      .then(data => updateWeatherPopUp(data)) // JSON from `response.json()` call
      .catch(error => console.error(error));
-     addWeatherPopupForMarker(marker);
  };
 
  function updateInputValue(resultArray){
@@ -135,8 +136,9 @@ function attachGoogleMapsApi(){
     inputEle.value = `${addressComp[1].long_name}, ${addressComp[3].long_name}`
  }
 
- function updateWeatherPopUp(weatherInfo){
-    console.log(weatherInfo)
+ function updateWeatherPopUp(data){
+    weatherInfo = data;
+    addWeatherPopupForMarker(marker);
  };
 
 
