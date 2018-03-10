@@ -89,8 +89,13 @@ function addWeatherPopupForMarker(marker){
     mapsOverlay.setMap(map);
     var popUpCont = document.querySelector("#weather-cont");
     var proj = mapsOverlay.getProjection();
+    var weatherProps = {
+        weathDesc: weatherInfo.weather[0].description,
+        maxTemp: weatherInfo.main.temp_max,
+        minTemp: weatherInfo.main.temp_min
+    }
     ReactDom.render(
-        <WeatherPopup weathDesc={weatherInfo.weather[0].description} minTemp={weatherInfo.main.temp_max} maxTemp={weatherInfo.main.temp_min}/>, popUpCont
+        <WeatherPopup weatherInfo = {weatherProps}/>, popUpCont
     )
     if(proj){
         var pos = marker.getPosition();
@@ -127,7 +132,7 @@ function attachGoogleMapsApi(){
      var lng = marker.getPosition().lng();
      var pos = {lat, lng};
      getWeatherData(pos)
-     .then(data => updateWeatherPopUp(data)) // JSON from `response.json()` call
+     .then(data => updateWeatherPopUp(data, marker)) // JSON from `response.json()` call
      .catch(error => console.error(error));
  };
 
@@ -136,7 +141,8 @@ function attachGoogleMapsApi(){
     inputEle.value = `${addressComp[1].long_name}, ${addressComp[3].long_name}`
  }
 
- function updateWeatherPopUp(data){
+ function updateWeatherPopUp(data, marker){
+    var marker = marker;
     weatherInfo = data;
     addWeatherPopupForMarker(marker);
  };
