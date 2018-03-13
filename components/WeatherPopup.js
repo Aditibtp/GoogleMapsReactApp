@@ -8,13 +8,14 @@ class WeatherPopup extends React.Component{
   }
 
   render() {
-    let weatherProps = this.props.weatherInfo
+    let weatherProps = this.props.weatherInfo;
+    let locationDetails = this.props.locationDetails;
     return (
       <div className="weather-popup">
         <div className="weather-intro">
           <div className="weather-icon"><img src="/images/weather-icons/01d.svg" className="weather-icon-svg"/></div>
           <div className="weather-summary">
-            <p>Bengaluru, Karnataka</p>
+            <p>{locationDetails}</p>
             <p className="weather-sum">{weatherProps.weathDesc}</p>
           </div>
         </div>
