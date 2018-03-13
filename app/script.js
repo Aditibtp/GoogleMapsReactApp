@@ -20,6 +20,12 @@ window.getUserLocation = function(){
     });
 }
 
+document.querySelector(".form-btn").addEventListener("click", function(){
+    console.log("inside click");
+    var address = inputEle.value;
+    getLatLongFromAddress(address);
+});
+
 function initMap(posLat, posLong) {
     posLat = posLat;
     posLong = posLong;
@@ -40,13 +46,10 @@ function initMap(posLat, posLong) {
     infowindow = new google.maps.InfoWindow;
 
     //intialising maker to get marker position on viewport using projection
-    marker = new google.maps.Marker({
-        position: uluru,
-        map: map
-    });
-
-    //hideLoader();
-
+    // marker = new google.maps.Marker({
+    //     position: uluru,
+    //     map: map
+    // });
     addMapClickListener();
     addInitMapListener(uluru);
 };
@@ -59,12 +62,52 @@ function addInitMapListener(latlng){
         mapCont.style.display = "block";
         addWeatherPopupForMarker(marker, latlng);
     });
-}
+};
+function getLatLongFromAddress(address){
+    //var address = "Chennai, Tamil Nadu";
+    // var geoAddtoLatLong = new Promise(function(resolve, reject){
+    //     geocoder.geocode({'address': address}, function(results, status) {
+    //         if (status === 'OK') {
+    //             if (results[0]) {
+    //                 console.log(results[0].geometry.location)
+    //                 resolve(results)
+    //             } else {
+    //                 reject("No results found")
+    //                 //window.alert('No results found');
+    //             }
+    //         } else {
+    //             reject('Geocoder failed due to: ' + status);
+    //             //window.alert('Geocoder failed due to: ' + status);
+    //         }
+    //     });
+    // });
+    //return geoAddtoLatLong;
+    geocoder.geocode({'address': address}, function(results, status) {
+        if (status === 'OK') {
+            if (results[0]) {
+                console.log(results)
+                console.log(results[0].geometry.location)
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+                var lat = marker.getPosition().lat();
+                var lng = marker.getPosition().lng();
+                //resolve(results)
+            } else {
+                //reject("No results found")
+                window.alert('No results found');
+            }
+        } else {
+            //reject('Geocoder failed due to: ' + status);
+            window.alert('Geocoder failed due to: ' + status);
+        }
+    });
+};
 
 //gets location city from lat long
 function geocodeLatLng(latlng) {
     // var latlng = uluru;
-    var location;
     var geoLocPromise = new Promise(function(resolve, reject){
         geocoder.geocode({'location': latlng}, function(results, status) {
             if (status === 'OK') {
@@ -95,60 +138,41 @@ function getWeatherData(latlng){
     }).then(response => response.json()) // parses response to JSON
 }
 
-function hideLoader(){
-    var location = geocodeLatLng();
-
-    getWeatherData(uluru)
-    .then(data => updateWeatherPopUp(data)) // JSON from `response.json()` call
-    .catch(error => console.error(error))
-
-    console.log("from hide loader");
-    console.log(location);
-    
-    map.addListener("idle", function(){
-        var loadingEle = document.querySelector(".loader");
-        loadingEle.style.display = "none";
-        var mapEle = document.querySelector("#mapCont");
-        mapCont.style.display = "block";
-        addWeatherPopupForMarker(marker, location);
-    });
-};
-
 function addWeatherPopupForMarker(marker, latlng){
     //get x and y of current lat-long marker
     var locationPro  = geocodeLatLng(latlng);
     var weatherPro = getWeatherData(latlng);
-
+    getLatLongFromAddress("Bengaluru, Karnataka");
     var location;
     var weatherInfo;
 
-    Promise.all([locationPro, weatherPro]).then((data)=>{
-        console.log(data[0]);
-        weatherInfo = data[1];
-        console.log(data[1]);
-        location = data[0][1];
-        var popUpCont = document.querySelector("#weather-cont");
-        var proj = mapsOverlay.getProjection();
+    // Promise.all([locationPro, weatherPro]).then((data)=>{
+    //     console.log(data[0]);
+    //     weatherInfo = data[1];
+    //     console.log(data[1]);
+    //     location = data[0][1];
+    //     var popUpCont = document.querySelector("#weather-cont");
+    //     var proj = mapsOverlay.getProjection();
     
-        var addressComp = location.address_components;
-        var locationDetails = `${addressComp[1].long_name}, ${addressComp[3].long_name}`
-        var weatherProps = {
-            weathDesc: weatherInfo.weather[0].description,
-            maxTemp: weatherInfo.main.temp_max,
-            minTemp: weatherInfo.main.temp_min
-        }
-        ReactDom.render(
-            <WeatherPopup weatherInfo = {weatherProps} locationDetails = {locationDetails}/>, popUpCont
-        )
-        if(proj){
-            var pos = marker.getPosition();
-            var p = proj.fromLatLngToContainerPixel(pos);
-            var weatherPopUp = document.querySelector(".weather-popup");
-            weatherPopUp.style.left = (p.x - 110) + "px";
-            weatherPopUp.style.top = (p.y - 10) + "px";
-            weatherPopUp.style.visibility = "visible";
-        }
-    });    
+    //     var addressComp = location.address_components;
+    //     var locationDetails = `${addressComp[1].long_name}, ${addressComp[3].long_name}`
+    //     var weatherProps = {
+    //         weathDesc: weatherInfo.weather[0].description,
+    //         maxTemp: weatherInfo.main.temp_max,
+    //         minTemp: weatherInfo.main.temp_min
+    //     }
+    //     ReactDom.render(
+    //         <WeatherPopup weatherInfo = {weatherProps} locationDetails = {locationDetails}/>, popUpCont
+    //     )
+    //     if(proj){
+    //         var pos = marker.getPosition();
+    //         var p = proj.fromLatLngToContainerPixel(pos);
+    //         var weatherPopUp = document.querySelector(".weather-popup");
+    //         weatherPopUp.style.left = (p.x - 110) + "px";
+    //         weatherPopUp.style.top = (p.y - 10) + "px";
+    //         weatherPopUp.style.visibility = "visible";
+    //     }
+    // });    
 }
 
 //updates marker position and creates pop up for new marker position
@@ -182,10 +206,5 @@ function attachGoogleMapsApi(){
      var addressComp = resultArray.address_components;
     inputEle.value = `${addressComp[1].long_name}, ${addressComp[3].long_name}`
  }
-
- function updateWeatherPopUp(data){
-    weatherInfo = data;
- };
-
 
 attachGoogleMapsApi();
