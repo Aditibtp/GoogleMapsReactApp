@@ -21,7 +21,6 @@ window.getUserLocation = function(){
 }
 
 document.querySelector(".form-btn").addEventListener("click", function(){
-    console.log("inside click");
     var address = inputEle.value;
     getLatLongFromAddress(address);
 });
@@ -33,7 +32,7 @@ function initMap(posLat, posLong) {
     
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: posLat, lng: posLong},
-        zoom: 8
+        zoom: 7
     });
 
     //initialising maps overlay
@@ -46,10 +45,10 @@ function initMap(posLat, posLong) {
     infowindow = new google.maps.InfoWindow;
 
     //intialising maker to get marker position on viewport using projection
-    // marker = new google.maps.Marker({
-    //     position: uluru,
-    //     map: map
-    // });
+    marker = new google.maps.Marker({
+        position: uluru,
+        map: map
+    });
     addMapClickListener();
     addInitMapListener(uluru);
 };
@@ -85,14 +84,19 @@ function getLatLongFromAddress(address){
     geocoder.geocode({'address': address}, function(results, status) {
         if (status === 'OK') {
             if (results[0]) {
-                console.log(results)
-                console.log(results[0].geometry.location)
                 var marker = new google.maps.Marker({
                     map: map,
                     position: results[0].geometry.location
                 });
                 var lat = marker.getPosition().lat();
                 var lng = marker.getPosition().lng();
+                var center = new google.maps.LatLng(lat, lng);
+                // using global variable:
+                //setTimeout used to avoid * geocoder failing due to over_query_limit * error
+                window.setTimeout(function(){
+                    map.panTo(center);
+                    addWeatherPopupForMarker(marker, {lat, lng});
+                }, 2000)
                 //resolve(results)
             } else {
                 //reject("No results found")
@@ -112,8 +116,8 @@ function geocodeLatLng(latlng) {
         geocoder.geocode({'location': latlng}, function(results, status) {
             if (status === 'OK') {
                 if (results[0]) {
-                    console.log(results)
-                    updateInputValue(results[1]);
+                    console.log(results);
+                    updateInputValue(results[0]);
                     resolve(results)
                 } else {
                     reject("No results found")
@@ -142,37 +146,34 @@ function addWeatherPopupForMarker(marker, latlng){
     //get x and y of current lat-long marker
     var locationPro  = geocodeLatLng(latlng);
     var weatherPro = getWeatherData(latlng);
-    getLatLongFromAddress("Bengaluru, Karnataka");
+    //getLatLongFromAddress("Bengaluru, Karnataka");
     var location;
     var weatherInfo;
-
-    // Promise.all([locationPro, weatherPro]).then((data)=>{
-    //     console.log(data[0]);
-    //     weatherInfo = data[1];
-    //     console.log(data[1]);
-    //     location = data[0][1];
-    //     var popUpCont = document.querySelector("#weather-cont");
-    //     var proj = mapsOverlay.getProjection();
+    Promise.all([locationPro, weatherPro]).then((data)=>{
+        weatherInfo = data[1];
+        location = data[0][1];
+        var popUpCont = document.querySelector("#weather-cont");
+        var proj = mapsOverlay.getProjection();
     
-    //     var addressComp = location.address_components;
-    //     var locationDetails = `${addressComp[1].long_name}, ${addressComp[3].long_name}`
-    //     var weatherProps = {
-    //         weathDesc: weatherInfo.weather[0].description,
-    //         maxTemp: weatherInfo.main.temp_max,
-    //         minTemp: weatherInfo.main.temp_min
-    //     }
-    //     ReactDom.render(
-    //         <WeatherPopup weatherInfo = {weatherProps} locationDetails = {locationDetails}/>, popUpCont
-    //     )
-    //     if(proj){
-    //         var pos = marker.getPosition();
-    //         var p = proj.fromLatLngToContainerPixel(pos);
-    //         var weatherPopUp = document.querySelector(".weather-popup");
-    //         weatherPopUp.style.left = (p.x - 110) + "px";
-    //         weatherPopUp.style.top = (p.y - 10) + "px";
-    //         weatherPopUp.style.visibility = "visible";
-    //     }
-    // });    
+        var addressComp = location.address_components;
+        var locationDetails = `${addressComp[1].long_name}, ${addressComp[3].long_name}`
+        var weatherProps = {
+            weathDesc: weatherInfo.weather[0].description,
+            maxTemp: weatherInfo.main.temp_max,
+            minTemp: weatherInfo.main.temp_min
+        }
+        ReactDom.render(
+            <WeatherPopup weatherInfo = {weatherProps} locationDetails = {locationDetails}/>, popUpCont
+        )
+        if(proj){
+            var pos = marker.getPosition();
+            var p = proj.fromLatLngToContainerPixel(pos);
+            var weatherPopUp = document.querySelector(".weather-popup");
+            weatherPopUp.style.left = (p.x - 110) + "px";
+            weatherPopUp.style.top = (p.y - 10) + "px";
+            weatherPopUp.style.visibility = "visible";
+        }
+    });    
 }
 
 //updates marker position and creates pop up for new marker position
