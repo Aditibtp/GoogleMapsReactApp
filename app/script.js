@@ -1,7 +1,5 @@
 var React  = require('react');
 var ReactDom = require('react-dom');
-import apiKeys from "../config/apikeys.json"
-var WeatherPopup = require('../components/WeatherPopup');
 
 var map;
 var posLat;
@@ -13,6 +11,13 @@ var mapsOverlay;
 var marker;
 var inputEle = document.querySelector("input");
 var weatherInfo = {};
+
+
+var WeatherPopup = require('./components/WeatherPopup');
+// var HeaderForm = require('./components/HeaderForm');
+// var api = require('../utils/api.js');
+
+import apiKeys from "../config/apikeys.json"
 
 window.getUserLocation = function(){
     navigator.geolocation.getCurrentPosition(function(position) {
@@ -118,7 +123,7 @@ function geocodeLatLng(latlng) {
                 if (results[0]) {
                     console.log(results);
                     updateInputValue(results[0]);
-                    resolve(results)
+                    resolve(results);
                 } else {
                     reject("No results found")
                     //window.alert('No results found');
@@ -163,16 +168,8 @@ function addWeatherPopupForMarker(marker, latlng){
             minTemp: weatherInfo.main.temp_min
         }
         ReactDom.render(
-            <WeatherPopup weatherInfo = {weatherProps} locationDetails = {locationDetails}/>, popUpCont
+            <WeatherPopup weatherInfo = {weatherProps} locationDetails = {locationDetails} mapMarker = {marker} projection={proj}/>, popUpCont
         )
-        if(proj){
-            var pos = marker.getPosition();
-            var p = proj.fromLatLngToContainerPixel(pos);
-            var weatherPopUp = document.querySelector(".weather-popup");
-            weatherPopUp.style.left = (p.x - 110) + "px";
-            weatherPopUp.style.top = (p.y - 10) + "px";
-            weatherPopUp.style.visibility = "visible";
-        }
     });    
 }
 
@@ -183,7 +180,15 @@ function addMapClickListener(){
     });
 };
 
+// function addHeaderFormElement(){
+//     var headerFormCont = document.querySelector(".form-element-div");
+//     ReactDom.render(
+//         <HeaderForm/>, headerFormCont
+//     )
+// }
+
 function attachGoogleMapsApi(){
+    //addHeaderFormElement();
     var scriptEle = document.createElement("script");
     scriptEle.src = `https://maps.googleapis.com/maps/api/js?key=${apiKeys.google_maps}&callback=getUserLocation&libraries=drawing,places`;
     // scriptEle.defer = true;

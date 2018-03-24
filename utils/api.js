@@ -46,7 +46,7 @@ function getLatLongFromAddress(address){
 };
 
 //gets location city from lat long
-function geocodeLatLng(latlng) {
+function geoCodeLatLng(latlng) {
     // var latlng = uluru;
     var geoLocPromise = new Promise(function(resolve, reject){
         geocoder.geocode({'location': latlng}, function(results, status) {

@@ -20,7 +20,10 @@ var config = {
     loaders: [
         {
           test: /\.json$/,
-          loader: 'json-loader'
+          loader: 'json-loader',
+          query: {
+            presets: ['react', 'es2015', 'stage-0']
+          }
         }
     ]
   },
