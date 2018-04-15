@@ -1,3 +1,5 @@
+import apiKeys from "../config/apikeys.json"
+
 function getLatLongFromAddress(address){
     //var address = "Chennai, Tamil Nadu";
     // var geoAddtoLatLong = new Promise(function(resolve, reject){
@@ -31,7 +33,7 @@ function getLatLongFromAddress(address){
                 //setTimeout used to avoid * geocoder failing due to over_query_limit * error
                 window.setTimeout(function(){
                     map.panTo(center);
-                    addWeatherPopupForMarker(marker, {lat, lng});
+                    //addWeatherPopupForMarker(marker, {lat, lng});
                 }, 2000)
                 //resolve(results)
             } else {
@@ -46,13 +48,13 @@ function getLatLongFromAddress(address){
 };
 
 //gets location city from lat long
-function geoCodeLatLng(latlng) {
+function geocodeLatLng(geocoder, latlng) {
     // var latlng = uluru;
     var geoLocPromise = new Promise(function(resolve, reject){
         geocoder.geocode({'location': latlng}, function(results, status) {
             if (status === 'OK') {
                 if (results[0]) {
-                    updateInputValue(results[0]);
+                    //updateInputValue(results[0]);
                     resolve(results)
                 } else {
                     reject("No results found")

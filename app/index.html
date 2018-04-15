@@ -8,18 +8,15 @@
     <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
-      html, body{
-        margin: 0;
-        padding: 0;
-      }
-      p{
+      html, body, p{
         margin: 0;
         padding: 0;
       }
       #mapCont{
         width: 100%;
-        display: none;
+        /* display: none; */
         height: 100%;
+        position: absolute;
       } 
       #map {
         width:100%;
@@ -55,7 +52,7 @@
         border-radius: 2px;
         font-size: 0.6em;
       }
-      .form-element-div{
+      .form-element-div, form{
         height: 50%;
         padding: 20px 0 0 50px;
         margin-left: 30px;
@@ -76,7 +73,6 @@
         from {
           transform: rotate(0deg);
         }
-
         to {
           transform: rotate(360deg);
         }
@@ -87,10 +83,7 @@
         flex-direction: column;
         width:100%;
         height: 100%;
-      }
-      #weather-cont{
-        width: 220px;
-        height: 120px;
+
       }
       .weather-popup{
         display: flex;
@@ -133,26 +126,29 @@
         background-color: #FF5722;
         cursor: pointer;
       }
+      #map-overlay{
+        width: 220px;
+        height: 120px;
+      }
     </style>
   </head>
   <body>
-    <div class="main-container">  
-      <div class="main-header">
+    <div class="main-container" id="app">  
+      <!-- <div class="main-header">
         <div class="text-header"><span>Weather Reporter</span></div>
           <div class="form-element-div">
             <input type="text" placeholder="current country"></input>
             <button class="form-btn">Go</button>
           </div>
-      </div>
+      </div> -->
+
         <div class="body-cont">
-          <div class="loader"></div>
+          <!-- <div class="loader"></div> -->
             <div id="mapCont">
               <div id="map"></div>
             </div>
-            <div id="weather-cont"></div>
+            <div id="map-overlay"></div>
         </div>
     </div>
-    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOH6MSgQoIx8cQ09zwt0eQGtWz_mqfNw4&callback=getUserLocation&libraries=drawing,places"
-    async defer></script> -->
   </body>
 </html>
